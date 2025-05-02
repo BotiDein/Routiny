@@ -15,9 +15,9 @@ class HobbyInfoPage extends StatefulWidget {
 }
 
 class _HobbyInfoPageState extends State<HobbyInfoPage> {
-  bool _isTimerRunning = false;
+  final bool _isTimerRunning = false;
   String _totalTime = '03:10:00';
-  String _weeklyGoal = '05:00:00';
+  final String _weeklyGoal = '05:00:00';
   bool _goalCompleted = false;
   
   // Lista de tiempos registrados
