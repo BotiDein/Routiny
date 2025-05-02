@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'hobbies_cronometro.dart';
 
 class HobbyInfoPage extends StatefulWidget {
   final Map<String, dynamic> hobby;
@@ -16,7 +17,7 @@ class HobbyInfoPage extends StatefulWidget {
 class _HobbyInfoPageState extends State<HobbyInfoPage> {
   bool _isTimerRunning = false;
   String _totalTime = '03:10:00';
-  final String _weeklyGoal = '05:00:00';
+  String _weeklyGoal = '05:00:00';
   bool _goalCompleted = false;
   
   // Lista de tiempos registrados
@@ -39,9 +40,37 @@ class _HobbyInfoPageState extends State<HobbyInfoPage> {
   final List<int> _activeDays = [2, 4]; // Martes y Jueves
 
   void _startTimer() {
-    setState(() {
-      _isTimerRunning = true;
-      // Aquí implementarías la lógica real del cronómetro
+    // Navegar a la pantalla del cronómetro
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => StopwatchPage(
+          hobby: widget.hobby,
+        ),
+      ),
+    ).then((result) {
+      // Procesar el resultado cuando vuelva de la pantalla del cronómetro
+      if (result != null && result is String) {
+        // Convertir el formato del cronómetro (MM:SS.CC) a formato de tiempo (HH:MM:SS)
+        final parts = result.split(':');
+        if (parts.length == 2) {
+          final minutesPart = parts[0];
+          final secondsPart = parts[1].split('.')[0];
+          
+          final formattedTime = '00:$minutesPart:$secondsPart';
+          
+          setState(() {
+            _registeredTimes.add({
+              'date': DateTime.now(),
+              'time': formattedTime,
+            });
+            // Actualizar tiempo total (simplificado)
+            _totalTime = _calculateTotalTime();
+            // Verificar si se cumplió la meta
+            _checkGoalCompletion();
+          });
+        }
+      }
     });
   }
 
