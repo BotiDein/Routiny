@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Hobbies App',
       theme: ThemeData(
         primaryColor: const Color(0xFF4A90E2),
-        scaffoldBackgroundColor: const Color(0xFFD6F9F0),
+        scaffoldBackgroundColor: const Color.fromRGBO(223, 255, 251, 1),
         useMaterial3: true,
       ),
       localizationsDelegates: const [
@@ -45,8 +45,9 @@ class HobbiesPage extends StatefulWidget {
   State<HobbiesPage> createState() => _HobbiesPageState();
 }
 
+// Modificar la clase HobbiesPage para que no tenga navegación en la barra inferior
+
 class _HobbiesPageState extends State<HobbiesPage> {
-  int _selectedIndex = 4; // Hobbies tab selected by default
   
   final List<Map<String, dynamic>> _hobbies = [
     {
@@ -60,12 +61,6 @@ class _HobbiesPageState extends State<HobbiesPage> {
       'time': '00:00:00',
     },
   ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -193,36 +188,7 @@ class _HobbiesPageState extends State<HobbiesPage> {
         },
         child: const Icon(Icons.add, color: Colors.white),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color(0xFF4A90E2),
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black54,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.trending_up),
-            label: 'Hábitos',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_view_day),
-            label: 'Agenda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Inicio',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month),
-            label: 'Calendario',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Hobbies',
-          ),
-        ],
-      ),
+      // Eliminar el bottomNavigationBar ya que ahora se maneja en MainNavigationPage
     );
   }
 }

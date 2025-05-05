@@ -11,7 +11,15 @@ class _HobbyAddPageState extends State<HobbyAddPage> {
   final TextEditingController _nameController = TextEditingController();
   String _selectedEmoji = '😊';
   
-  final List<String> _emojis = ['😊', '😐', '😍', '🎮', '🎵', '📚', '🎨', '⚽', '🏋️', '🧘'];
+  final List<String> _emojis = [
+    '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇',
+    '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚',
+    '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩',
+    '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣',
+    '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬',
+    '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗',
+    '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯',
+  ];
 
   @override
   void dispose() {

@@ -117,13 +117,13 @@ class _StopwatchPageState extends State<StopwatchPage> {
             ? (_isPaused ? "Cronómetro pausado" : "Cronómetro empezado") 
             : "Cronómetro sin empezar",
           style: const TextStyle(
-            color: Colors.white,
+            color: Color.fromARGB(255, 0, 0, 0),
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Color.fromARGB(255, 0, 0, 0)),
           onPressed: () {
             // Preguntar si desea guardar el tiempo antes de salir
             if (_isRunning) {
@@ -157,7 +157,7 @@ class _StopwatchPageState extends State<StopwatchPage> {
         ),
       ),
       body: Container(
-        color: Colors.black,
+        color: Color(0xFFD6F9F0),
         child: Column(
           children: [
             // Tiempo del cronómetro
@@ -169,7 +169,7 @@ class _StopwatchPageState extends State<StopwatchPage> {
                   style: const TextStyle(
                     fontSize: 60,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 0, 0, 0),
                   ),
                 ),
               ),
@@ -230,7 +230,7 @@ class _StopwatchPageState extends State<StopwatchPage> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 0, 0, 0),
                   ),
                 ),
               ),
@@ -243,7 +243,7 @@ class _StopwatchPageState extends State<StopwatchPage> {
                       title: Text(
                         'Checkpoint ${index + 1}: ${_checkpoints[index]}',
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Color.fromARGB(255, 0, 0, 0),
                         ),
                       ),
                     );

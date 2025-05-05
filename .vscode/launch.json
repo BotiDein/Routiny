@@ -4,12 +4,13 @@
     // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
         "version": "0.2.0",
         "configurations": [
+
           {
             "name": "inicio_sesion",
             "cwd": "flutter2\\inicio_sesion",
             "request": "launch",
             "type": "dart",
-            "program": "lib/hobbies.dart"
+            "program": "lib/main.dart"
           },
           {
             "name": "inicio_sesion (profile mode)",
@@ -17,7 +18,7 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile",
-            "program": "lib/hobbies.dart"
+            "program": "lib/main.dart"
           },
           {
             "name": "inicio_sesion (release mode)",
@@ -25,7 +26,7 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release",
-            "program": "lib/hobbies.dart"
+            "program": "lib/main.dart"
           }
         ]
       }
