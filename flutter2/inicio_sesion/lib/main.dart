@@ -5,21 +5,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'firebase_options.dart';
+import 'menu.dart'; // Importa tu menú principal
+import 'inicio.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(
-    options: kIsWeb ? const FirebaseOptions(
-      apiKey: "AIzaSyCPwX9upDp-flkmNsCavMonifBQluastBQ",
-    authDomain: "proyecto-final-6b20e.firebaseapp.com",
-    projectId: "proyecto-final-6b20e",
-    storageBucket: "proyecto-final-6b20e.firebasestorage.app",
-    messagingSenderId: "826917239714",
-   appId: "1:826917239714:web:34136d38b90440492ed0fb",
-    ) : DefaultFirebaseOptions.currentPlatform,
+    options: kIsWeb
+        ? const FirebaseOptions(
+            apiKey: "AIzaSyCPwX9upDp-flkmNsCavMonifBQluastBQ",
+            authDomain: "proyecto-final-6b20e.firebaseapp.com",
+            projectId: "proyecto-final-6b20e",
+            storageBucket: "proyecto-final-6b20e.firebasestorage.app",
+            messagingSenderId: "826917239714",
+            appId: "1:826917239714:web:34136d38b90440492ed0fb",
+          )
+        : DefaultFirebaseOptions.currentPlatform,
   );
-
   runApp(const MyApp());
 }
 
@@ -30,20 +32,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const InitialScreen(),
+      home: const Inicio(),
     );
   }
 }
 
-class InitialScreen extends StatelessWidget {
-  const InitialScreen({super.key});
+class LandingPage extends StatelessWidget {
+  const LandingPage({super.key});
 
   void _showGuestDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) => AlertDialog(
         title: const Text('Advertencia'),
-        content: const Text('Si se borra la app, los datos no quedarán guardados.'),
+        content:
+            const Text('Si se borra la app, los datos no quedarán guardados.'),
         actions: [
           TextButton(
             child: const Text('Cancelar'),
@@ -54,12 +57,10 @@ class InitialScreen extends StatelessWidget {
             onPressed: () async {
               Navigator.pop(dialogContext);
               await FirebaseAuth.instance.signInAnonymously();
-
               if (!dialogContext.mounted) return;
-
-              Navigator.push(
+              Navigator.pushReplacement(
                 dialogContext,
-                MaterialPageRoute(builder: (_) => const WelcomePage()),
+                MaterialPageRoute(builder: (_) => const Menu()),
               );
             },
           ),
@@ -100,7 +101,8 @@ class InitialScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(builder: (_) => const RegisterPage()),
                 ),
-                child: const Text('¿No te has registrado aun?\nDa clic aquí', textAlign: TextAlign.center),
+                child: const Text('¿No te has registrado aun?\nDa clic aquí',
+                    textAlign: TextAlign.center),
               )
             ],
           ),
@@ -123,61 +125,61 @@ class _LoginPageState extends State<LoginPage> {
   String error = '';
   bool isLoading = false;
 
-Future<void> loginWithEmail() async {
-  if (!mounted) return; // Por seguridad extra antes de empezar
+  Future<void> loginWithEmail() async {
+    if (!mounted) return;
 
-  setState(() => isLoading = true);
-  try {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-    );
+    setState(() => isLoading = true);
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
 
-    if (!mounted) return; // Verificamos que el widget sigue montado
+      if (!mounted) return;
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const WelcomePage()),
-    );
-  } on FirebaseAuthException catch (e) {
-    if (!mounted) return; // Verificamos que sigue montado antes de usar setState
-    setState(() => error = e.message ?? 'Error');
-  } finally {
-    if (mounted) {
-      setState(() => isLoading = false);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const Menu()),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+      setState(() => error = e.message ?? 'Error');
+    } finally {
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
   }
-}
 
-Future<void> loginWithGoogle() async {
-  if (!mounted) return;
-
-  try {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    if (googleUser == null) return;
-
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    await FirebaseAuth.instance.signInWithCredential(credential);
-
+  Future<void> loginWithGoogle() async {
     if (!mounted) return;
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const WelcomePage()),
-    );
-  } catch (e) {
-    if (!mounted) return;
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return;
 
-    setState(() => error = 'Error con Google Sign-In: $e');
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      if (!mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const Menu()),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() => error = 'Error con Google Sign-In: $e');
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -193,13 +195,19 @@ Future<void> loginWithGoogle() async {
                 const SizedBox(height: 20),
                 TextField(
                   controller: emailController,
-                  decoration: const InputDecoration(labelText: 'Usuario', filled: true, fillColor: Colors.cyanAccent),
+                  decoration: const InputDecoration(
+                      labelText: 'Usuario',
+                      filled: true,
+                      fillColor: Colors.cyanAccent),
                 ),
                 const SizedBox(height: 12),
                 TextField(
                   controller: passwordController,
                   obscureText: true,
-                  decoration: const InputDecoration(labelText: 'Contraseña', filled: true, fillColor: Colors.cyanAccent),
+                  decoration: const InputDecoration(
+                      labelText: 'Contraseña',
+                      filled: true,
+                      fillColor: Colors.cyanAccent),
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
@@ -214,7 +222,8 @@ Future<void> loginWithGoogle() async {
                 if (error.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 12),
-                    child: Text(error, style: const TextStyle(color: Colors.red)),
+                    child:
+                        Text(error, style: const TextStyle(color: Colors.red)),
                   ),
                 const SizedBox(height: 16),
                 TextButton(
@@ -222,7 +231,8 @@ Future<void> loginWithGoogle() async {
                     context,
                     MaterialPageRoute(builder: (_) => const RegisterPage()),
                   ),
-                  child: const Text('¿No te has registrado aún?\nDa clic aquí', textAlign: TextAlign.center),
+                  child: const Text('¿No te has registrado aún?\nDa clic aquí',
+                      textAlign: TextAlign.center),
                 )
               ],
             ),
@@ -258,7 +268,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const WelcomePage()),
+        MaterialPageRoute(builder: (_) => const Menu()),
       );
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
@@ -280,13 +290,19 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 20),
                 TextField(
                   controller: emailController,
-                  decoration: const InputDecoration(labelText: 'Usuario', filled: true, fillColor: Colors.cyanAccent),
+                  decoration: const InputDecoration(
+                      labelText: 'Usuario',
+                      filled: true,
+                      fillColor: Colors.cyanAccent),
                 ),
                 const SizedBox(height: 12),
                 TextField(
                   controller: passwordController,
                   obscureText: true,
-                  decoration: const InputDecoration(labelText: 'Contraseña', filled: true, fillColor: Colors.cyanAccent),
+                  decoration: const InputDecoration(
+                      labelText: 'Contraseña',
+                      filled: true,
+                      fillColor: Colors.cyanAccent),
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
@@ -296,7 +312,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 if (error.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 12),
-                    child: Text(error, style: const TextStyle(color: Colors.red)),
+                    child:
+                        Text(error, style: const TextStyle(color: Colors.red)),
                   ),
                 const SizedBox(height: 16),
                 TextButton(
@@ -304,47 +321,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     context,
                     MaterialPageRoute(builder: (_) => const LoginPage()),
                   ),
-                  child: const Text('¿Ya tienes una cuenta?\nDa clic aquí', textAlign: TextAlign.center),
+                  child: const Text('¿Ya tienes una cuenta?\nDa clic aquí',
+                      textAlign: TextAlign.center),
                 )
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class WelcomePage extends StatelessWidget {
-  const WelcomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bienvenido'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-
-              if (!context.mounted) return;
-
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => const InitialScreen()),
-                (_) => false,
-              );
-            },
-          )
-        ],
-      ),
-      body: Center(
-        child: Text(
-          '¡Bienvenido, ${user?.email ?? 'Invitado'}!',
-          style: const TextStyle(fontSize: 24),
         ),
       ),
     );
